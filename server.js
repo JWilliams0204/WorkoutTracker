@@ -13,7 +13,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {useNewUrlParser: true, useFindAndModify: false});
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv: Pathwill1:<Pathwill1>@cluster0.30jy4.mongodb.net/<dbname>?retryWrites=true&w=majority", {useNewUrlParser: true, useFindAndModify: false});
 
 app.use(require("./routes/api-routes.js"));
 app.use(require("./routes/html-routes.js"));
