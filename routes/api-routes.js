@@ -1,37 +1,83 @@
-const db = require("../models/workoutModel");
-const router = require("express").Router();
+const express = require('express');
+const router = express.Router();
+const db = require("../models");
+//const router = require("express").Router();//
 
 router.get("/api/workouts", (req, res) => {
-    db.aggregate([
-      {
-          $addFields: {
-              totalDuration: {
-                  $sum: "$exercises.duration"
-              }
-          }
-      }
-    ])
-    .then((workouts)=>{
-        res.json(workouts)
+    db.Workout.find()
+    .then(dbWorkout => {
+        res.json(dbWorkout);
     })
-    router.post("/api/workouts", (req, res) =>
-{
-    db.create({}).then((workouts)=>{
-        res.json(workouts)
-    })   
-}
-)
-router.put("/api/workouts/:id", (req, res) =>{
-    db.findByIdAndUpdate(
-        req.params.id,
-        {$push: {exercises: req.body}},
-        {new: true, runValidators: true}
-    ).then((workouts)=>{
-        res.json(workouts)
-        
-}
-)
-}); 
+    .catch(err => {
+        res.status(400).json(err);
+  
+    })
+});
 
-})
+router.post("/api/workouts", ({ body }, res) => {
+    db.Workout.create(body)
+    .then(dbWorkout => {
+        res.json(dbWorkout);
+    })
+    .catch(err => {
+        res.json(err);
+    });
+});
+
+router.get("/api/workouts/range", (req, res) => {
+    db.Workout.find()
+    .then(dbWorkout => {
+        res.json(dbWorkout);
+    })
+    .catch(err => {
+        res.status(400).json(err);
+  
+    })
+
+});
+
+router.get("/api/workouts/:id", (req, res) => {
+    
+        const { id } = req.params;
+        db.Workout.findOne({
+            _id: id,
+        }).then(dbWorkout => {
+            res.json(dbWorkout);
+        })
+        .catch(err => {
+            res.status(400).json
+        })
+   
+});
+
+router.put("/api/workouts/:id", ({body, params}, res) => {
+    // console.log(body, params)
+    const id = params.id;
+    let savedExercises = [];
+
+    // gets all the currently saved exercises in the current workout
+    db.Workout.find({_id: id})
+        .then(dbWorkout => {
+            // console.log(dbWorkout);
+            savedExercises = dbWorkout[0].exercises;
+            // console.log('savedExcercises', savedExercises);
+            // console.log('longway', dbWorkout[0].exercises);
+            res.json(savedExercises);
+            // console.log('body', body);
+            let allExercises = [...savedExercises, body];
+            // console.log('allExercises', allExercises);
+            updateWorkout(allExercises);
+        })
+        .catch(err => {
+            res.json(err);
+        });
+
+    function updateWorkout(exercises){
+        db.Workout.findByIdAndUpdate(id, {exercises: exercises}, function(err, doc){
+        if(err){
+            console.log(err)
+        }
+        })
+    }        
+});
 module.exports = router;

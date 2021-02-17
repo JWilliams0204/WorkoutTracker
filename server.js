@@ -1,19 +1,25 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("morgan");
-const db = require("./models/workoutModel");
-const path = require("path");
+/*const db = require("./models/workout");
+const path = require("path");*/
 const PORT = process.env.PORT || 8080;
 
 const app = express();
 
 app.use(logger("dev"));
 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb+srv: Pathwill1:<Pathwill1>@cluster0.30jy4.mongodb.net/<dbname>?retryWrites=true&w=majority", {useNewUrlParser: true, useFindAndModify: false});
+mongoose.connect(
+  process.env.MONGODB_URI ||
+    "mongodb: //localhost/workout",
+  { useNewUrlParser: true, useFindAndModify: false }, () => 
+  console.log("Connected to DB")
+  );
+
 
 app.use(require("./routes/api-routes.js"));
 app.use(require("./routes/html-routes.js"));
@@ -55,6 +61,6 @@ app.put("/api/workouts/:id", (req, res) =>{
 app.get("/exercise", (req, res) => {
     res.sendFile(path.join(__dirname, "./public/exercise.html") )
 }) */
-app.listen(PORT, () => {
-    console.log(`App running on Port ${PORT}!`)
+app.listen(PORT, function () {
+  console.log(`App running on port ${PORT}!`);
 });

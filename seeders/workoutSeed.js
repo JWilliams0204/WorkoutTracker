@@ -1,4 +1,4 @@
-let workoutSeed = [
+/*let workoutSeed = [
     {
       day: new Date().setDate(new Date().getDate()-10),
       exercises: [
@@ -115,4 +115,4 @@ let workoutSeed = [
       ]
     }
   ];
-  db.workouts.insertMany(workoutSeed);
+  db.workouts.insertMany(workoutSeed); */
